@@ -3,61 +3,475 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SeaRode Logo Generator & Preview</title>
+<title>SeaRode — Good Food • Good Vibes • Always</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,600&display=swap');
 :root{--ink:#07100f;--cream:#f7f3ec;--gold:#e2bf75;--gold2:#f1d696;--muted:#9fa7a4;--card:#101817;--line:rgba(255,255,255,.1)}
-*{box-sizing:border-box}body{margin:0;background:var(--ink);color:#fff;font-family:"DM Sans",sans-serif;padding:40px 20px;display:flex;flex-direction:column;align-items:center}
-.container{max-width:800px;width:100%;text-align:center}
-h1{font-family:"Playfair Display",serif;color:var(--gold);margin-bottom:10px;font-size:32px}
-p{color:var(--muted);margin-bottom:40px}
-.previewGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;margin-bottom:40px}
-.logoCard{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:30px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:240px;position:relative}
-.logoCard.dark{background:#050b0a}
-.logoCard.light{background:#f7f3ec;color:#07100f}
-.logoSvgWrapper{margin-bottom:16px}
-.label{font-size:12px;letter-spacing:2px;font-weight:600;color:var(--muted);text-transform:uppercase;margin-top:auto}
-.goldBtn{background:var(--gold);border:0;border-radius:28px;padding:12px 24px;font-weight:700;color:#131a18;cursor:pointer;transition:.2s;text-decoration:none;display:inline-block}
-.goldBtn:hover{background:var(--gold2)}
-@media(max-width:600px){.previewGrid{grid-template-columns:1fr}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--ink);color:#fff;font-family:"DM Sans",sans-serif}
+button,input{font:inherit}
+
+/* Top Nav */
+.top{position:sticky;top:0;z-index:20;background:rgba(5,11,10,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.nav{height:84px;display:flex;align-items:center;gap:34px;max-width:1380px;margin:auto;padding:0 32px}
+.logoText{font-family:"Playfair Display",serif;font-size:28px;font-style:italic;color:var(--gold);font-weight:700;text-decoration:none;letter-spacing:-0.5px}
+.links{display:flex;gap:30px;margin-left:35px}
+.links button,.cartBtn{border:0;background:none;color:#d8dedb;cursor:pointer;font-weight:600;font-size:15px;transition:.2s}
+.links button:hover,.cartBtn:hover{color:var(--gold)}
+.links button.active{color:var(--gold)}
+.cartBtn{display:flex;align-items:center;gap:6px}
+.count{background:white;color:#111;border-radius:50%;min-width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+
+.search{margin-left:auto;display:flex;align-items:center;background:#182220;border:1px solid rgba(255,255,255,.08);border-radius:28px;padding:0 18px;width:260px;height:44px}
+.search input{background:none;border:0;outline:0;color:white;width:100%;margin-left:8px;font-size:14px}
+.search input::placeholder{color:#8c9592}
+
+.orderBtn,.goldBtn{background:var(--gold);border:0;border-radius:28px;padding:12px 24px;font-weight:700;color:#131a18;cursor:pointer;transition:.2s}
+.goldBtn:hover,.orderBtn:hover{background:var(--gold2)}
+
+/* Hero Section */
+.hero{min-height:560px;position:relative;display:flex;align-items:center;background:linear-gradient(90deg,rgba(5,11,10,.94) 0%,rgba(5,11,10,.6) 45%,rgba(5,11,10,.2) 100%),url('https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=2200&q=90') center/cover}
+.heroInner{max-width:1380px;width:100%;margin:auto;padding:60px 32px}
+.tag{letter-spacing:4px;color:#e8ce94;font-size:12px;font-weight:600;margin-bottom:14px}
+.hero h1{font-family:"Playfair Display",serif;font-size:38px;margin:0 0 10px;font-weight:600}
+.hero p{font-size:16px;max-width:460px;line-height:1.55;color:#ccd5d1;margin:0 0 24px}
+
+/* Categories Bar */
+.categories{background:var(--cream);color:#111;display:flex;overflow:auto;gap:24px;padding:26px max(32px,calc((100vw - 1380px)/2));scrollbar-width:none}
+.categories::-webkit-scrollbar{display:none}
+.cat{min-width:88px;text-align:center;border:0;background:none;cursor:pointer;color:#222;transition:.2s}
+.cat:hover{transform:translateY(-3px)}
+.catImg{width:76px;height:76px;border-radius:50%;object-fit:cover;display:block;margin:auto auto 8px;border:3px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.cat span{font-size:13px;font-weight:600}
+
+/* Main Content Grid */
+.section{max-width:1380px;margin:auto;padding:50px 32px}
+.sectionTitle{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:24px}
+.sectionTitle h2{font-family:"Playfair Display",serif;font-size:36px;margin:0;font-weight:600}
+.sectionTitle small{color:var(--gold);cursor:pointer;font-weight:600;font-size:14px}
+.sectionTitle small:hover{text-decoration:underline}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:.2s}
+.card:hover{border-color:rgba(226,191,117,.3);transform:translateY(-2px)}
+.card img{width:100%;height:210px;object-fit:cover;display:block}
+.cardBody{padding:20px}
+.card h3{margin:0 0 6px;font-family:"Playfair Display",serif;font-size:20px;font-weight:600}
+.price{color:var(--gold);font-weight:700;font-size:17px;margin-bottom:16px}
+.add{width:100%;border:0;background:var(--gold);border-radius:24px;padding:11px;font-weight:700;color:#131a18;cursor:pointer;transition:.2s}
+.add:hover{background:var(--gold2)}
+
+/* Filters Bar */
+.filters{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px}
+.pill{border:1px solid var(--line);background:#111b19;color:#fff;border-radius:24px;padding:10px 18px;cursor:pointer;font-size:14px;font-weight:500;transition:.2s}
+.pill:hover,.pill.active{background:var(--gold);color:#131a18;border-color:var(--gold);font-weight:700}
+
+/* Modals */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+.modal.show{display:flex}
+.modalBox{width:min(540px,100%);background:#101817;border:1px solid var(--line);border-radius:24px;padding:30px;box-shadow:0 30px 90px rgba(0,0,0,.8)}
+.modalBox h2{font-family:"Playfair Display",serif;margin-top:0;font-size:26px}
+.close{float:right;background:none;border:0;color:#8c9592;font-size:26px;cursor:pointer;line-height:1}
+.close:hover{color:#fff}
+.cartLine{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:14px 0;border-bottom:1px solid var(--line)}
+.qty{display:flex;gap:10px;align-items:center}
+.qty button{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:#1a2422;color:#fff;cursor:pointer}
+.qty button:hover{background:var(--gold);color:#131a18}
+.total{font-size:24px;font-weight:700;text-align:right;margin:24px 0;color:var(--gold)}
+.notice{background:rgba(226,191,117,.1);border:1px solid rgba(226,191,117,.2);color:#efd797;padding:14px;border-radius:12px;margin:16px 0;font-size:13px;line-height:1.4}
+.checkoutInput{width:100%;background:#172220;border:1px solid var(--line);color:#fff;border-radius:12px;padding:13px 16px;margin:8px 0;outline:none}
+.checkoutInput:focus{border-color:var(--gold)}
+.empty{text-align:center;padding:50px;color:#8c9592}
+
+.footer{border-top:1px solid var(--line);padding:45px 32px;color:#8c9592;text-align:center;font-size:14px;margin-top:60px}
+
+@media(max-width:1024px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){
+  .links{display:none}
+  .search{width:150px}
+  .grid{grid-template-columns:1fr}
+  .heroInner{padding:40px 20px}
+  .nav{padding:0 20px}
+}
 </style>
 </head>
 <body>
 
-<div class="container">
-  <h1>SeaRode Brand Logo Suite</h1>
-  <p>Custom vector-style emblem concepts crafted for your restaurant. Copy or use these scalable assets directly in your web project.</p>
-
-  <div class="previewGrid">
-    
-    <!-- Concept 1: Modern Luxury Seal -->
-    <div class="logoCard dark">
-      <div class="logoSvgWrapper">
-        <svg width="180" height="70" viewBox="0 0 180 70" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M15 35C15 23.9543 23.9543 15 35 15H145C156.046 15 165 23.9543 165 35C165 46.0457 156.046 55 145 55H35C23.9543 55 15 46.0457 15 35Z" stroke="#e2bf75" stroke-width="2"/>
-          <path d="M45 25L52 45H57L62 32L67 45H72L79 25" stroke="#e2bf75" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <text x="92" y="41" font-family="'Playfair Display', serif" font-size="22" font-style="italic" font-weight="700" fill="#f7f3ec">SeaRode</text>
-        </svg>
-      </div>
-      <div class="label">Dark Background Version</div>
-    </div>
-
-    <!-- Concept 2: Light Elegant Seal -->
-    <div class="logoCard light">
-      <div class="logoSvgWrapper">
-        <svg width="180" height="70" viewBox="0 0 180 70" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="35" cy="35" r="22" stroke="#07100f" stroke-width="2"/>
-          <path d="M26 30L30 42H33L36 34L39 42H42L46 30" stroke="#07100f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <text x="68" y="41" font-family="'Playfair Display', serif" font-size="22" font-style="italic" font-weight="700" fill="#07100f">SeaRode</text>
-        </svg>
-      </div>
-      <div class="label" style="color:#555">Light Background Version</div>
-    </div>
-
+<header class="top">
+<nav class="nav">
+  <a href="#" class="logoText" onclick="goHome(); return false;">SeaRode</a>
+  
+  <div class="links">
+    <button class="active" onclick="goHome()">Home</button>
+    <button onclick="showMenu()">Menu</button>
+    <button onclick="showKids()">Kids Menu</button>
+    <button onclick="showDrinks()">Drinks</button>
   </div>
 
-  <button class="goldBtn" onclick="navigator.clipboard.writeText(`<div style='font-family:Playfair Display,serif;font-size:32px;font-style:italic;color:#e2bf75;font-weight:600;'>SeaRode</div>`); alert('HTML Logo snippet copied to clipboard!');">Copy HTML Logo Snippet</button>
+  <div class="search">
+    <span>⌕</span>
+    <input id="search" placeholder="Search food..." oninput="renderSearch()">
+  </div>
+
+  <button class="cartBtn" onclick="openCart()">
+    🛒 Cart <span class="count" id="count">0</span>
+  </button>
+  
+  <button class="orderBtn" onclick="showMenu()">Order Now ›</button>
+</nav>
+</header>
+
+<section class="hero">
+<div class="heroInner">
+  <div class="tag">GOOD FOOD • GOOD VIBES • ALWAYS</div>
+  <h1>Fresh Flavors. Great Vibes.</h1>
+  <p>Order your favorites from SeaRode — where every meal brings the ocean to your table.</p>
+  <button class="goldBtn" onclick="showMenu()">View Menu ›</button>
+</div>
+</section>
+
+<!-- Top Category Quick-Bar -->
+<div class="categories" id="categories"></div>
+
+<main class="section" id="main">
+  <div class="sectionTitle">
+    <h2>Popular Items</h2>
+    <small onclick="showMenu()">View All Popular Items →</small>
+  </div>
+  <div class="grid" id="popular"></div>
+</main>
+
+<!-- Cart Modal -->
+<div class="modal" id="cartModal" onclick="if(event.target===this)closeCart()">
+  <div class="modalBox">
+    <button class="close" onclick="closeCart()">×</button>
+    <h2>Your SeaRode Order</h2>
+    <div id="cartLines"></div>
+    <div class="total" id="cartTotal">$0.00</div>
+    <button class="goldBtn" style="width:100%" onclick="checkout()">Continue to Checkout</button>
+  </div>
 </div>
 
+<!-- Checkout Modal -->
+<div class="modal" id="checkoutModal" onclick="if(event.target===this)closeCheckout()">
+  <div class="modalBox">
+    <button class="close" onclick="closeCheckout()">×</button>
+    <h2>Place Your Roleplay Order</h2>
+    <div class="notice">This is a roleplay website. No real payment is collected and no real order is transmitted. Enjoy your roleplay experience!</div>
+    <input class="checkoutInput" id="customerName" placeholder="Your Name">
+    <input class="checkoutInput" id="customerEmail" placeholder="Email (optional)">
+    <select class="checkoutInput" id="orderType">
+      <option>Online pickup</option>
+      <option>Roleplay delivery</option>
+      <option>Dine-in table service</option>
+    </select>
+    <button class="goldBtn" style="width:100%;margin-top:12px" onclick="placeOrder()">Place Fake Order</button>
+  </div>
+</div>
+
+<footer class="footer">
+  © 2026 SeaRode • Good Food • Good Vibes • Always • Roleplay Restaurant Website
+</footer>
+
+<script>
+const CATEGORIES = [
+  {name: "Appetizers", image: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=400&q=80"},
+  {name: "Burgers", image: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=400&q=80"},
+  {name: "Chicken", image: "https://images.unsplash.com/photo-1600891964092-4316c288032e?auto=format&fit=crop&w=400&q=80"},
+  {name: "Sandwiches", image: "https://images.unsplash.com/photo-1550507992-eb63ffee0847?auto=format&fit=crop&w=400&q=80"},
+  {name: "Wraps", image: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=400&q=80"},
+  {name: "Pizza", image: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=400&q=80"},
+  {name: "Pasta", image: "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=400&q=80"},
+  {name: "Steak", image: "https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&w=400&q=80"},
+  {name: "Seafood", image: "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=400&q=80"},
+  {name: "Salads", image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=400&q=80"},
+  {name: "Soups", image: "https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=400&q=80"},
+  {name: "Kids", image: "https://images.unsplash.com/photo-1543339308-43e59d6b73a6?auto=format&fit=crop&w=400&q=80"},
+  {name: "Drinks", image: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=400&q=80"}
+];
+
+const MENU = [
+  // Popular / Featured items
+  {name: "Classic Cheeseburger", category: "Burgers", price: 12.99, image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=900&q=85"},
+  {name: "Chicken Tenders", category: "Chicken", price: 10.99, image: "https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=900&q=85"},
+  {name: "Pepperoni Pizza", category: "Pizza", price: 14.99, image: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=900&q=85"},
+  {name: "Chicken Alfredo Pasta", category: "Pasta", price: 16.99, image: "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=900&q=85"},
+  {name: "Grilled Salmon", category: "Seafood", price: 18.99, image: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=900&q=85"},
+  {name: "Chocolate Lava Cake", category: "Appetizers", price: 8.99, image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=900&q=85"},
+
+  // Appetizers with exact named matching imagery
+  {name: "Crispy Calamari", category: "Appetizers", price: 9.99, image: "https://images.unsplash.com/photo-1599487488170-ded1ec9115f0?auto=format&fit=crop&w=900&q=85"},
+  {name: "Coconut Shrimp", category: "Appetizers", price: 10.49, image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=900&q=85"},
+  {name: "Buffalo Wings", category: "Appetizers", price: 11.24, image: "https://images.unsplash.com/photo-1608039829572-78524f79c4c7?auto=format&fit=crop&w=900&q=85"},
+  {name: "Garlic Parmesan Wings", category: "Appetizers", price: 11.24, image: "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?auto=format&fit=crop&w=900&q=85"},
+  {name: "Mozzarella Sticks", category: "Appetizers", price: 8.99, image: "https://images.unsplash.com/photo-1548340748-6d2b7d7da2b4?auto=format&fit=crop&w=900&q=85"},
+  {name: "Loaded Cheese Fries", category: "Appetizers", price: 9.74, image: "https://images.unsplash.com/photo-1585109649139-366815a0d713?auto=format&fit=crop&w=900&q=85"},
+  {name: "Truffle Fries", category: "Appetizers", price: 10.49, image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=900&q=85"},
+
+  // Burgers with unique distinct burger imagery
+  {name: "Bacon Cheddar Burger", category: "Burgers", price: 13.99, image: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=900&q=85"},
+  {name: "Mushroom Swiss Burger", category: "Burgers", price: 14.49, image: "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=900&q=85"},
+  {name: "Smoky BBQ Burger", category: "Burgers", price: 14.99, image: "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?auto=format&fit=crop&w=900&q=85"},
+
+  // Chicken & Sandwiches
+  {name: "Nashville Hot Chicken", category: "Chicken", price: 13.24, image: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=900&q=85"},
+  {name: "Philly Cheesesteak", category: "Sandwiches", price: 13.74, image: "https://images.unsplash.com/photo-1550507992-eb63ffee0847?auto=format&fit=crop&w=900&q=85"},
+  {name: "Chicken Caesar Wrap", category: "Wraps", price: 11.99, image: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=900&q=85"},
+  {name: "Margherita Pizza", category: "Pizza", price: 15.49, image: "https://images.unsplash.com/photo-1604382355076-af4b0eb60143?auto=format&fit=crop&w=900&q=85"},
+  {name: "Shrimp Scampi Pasta", category: "Pasta", price: 17.24, image: "https://images.unsplash.com/photo-1633964913295-ceb43826e7c9?auto=format&fit=crop&w=900&q=85"},
+  {name: "Ribeye Steak", category: "Steak", price: 26.99, image: "https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&w=900&q=85"},
+  {name: "New York Strip", category: "Steak", price: 24.99, image: "https://images.unsplash.com/photo-1603048588665-791ca8aea617?auto=format&fit=crop&w=900&q=85"},
+  {name: "Lobster Tail Dinner", category: "Seafood", price: 29.99, image: "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?auto=format&fit=crop&w=900&q=85"},
+  {name: "Greek Salad", category: "Salads", price: 10.99, image: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=900&q=85"},
+  {name: "Clam Chowder", category: "Soups", price: 7.99, image: "https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=900&q=85"}
+];
+
+const KIDS_MENU = [
+  {name: "Kids Cheeseburger & Fries", category: "Kids", price: 6.99, image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=900&q=85"},
+  {name: "Kids Chicken Tenders", category: "Kids", price: 6.99, image: "https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=900&q=85"},
+  {name: "Kids Mac & Cheese", category: "Kids", price: 5.99, image: "https://images.unsplash.com/photo-1543339308-43e59d6b73a6?auto=format&fit=crop&w=900&q=85"},
+  {name: "Kids Mini Pizza", category: "Kids", price: 6.49, image: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=900&q=85"},
+  {name: "Kids Grilled Cheese", category: "Kids", price: 5.49, image: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=900&q=85"},
+  {name: "Kids Spaghetti & Meatball", category: "Kids", price: 6.29, image: "https://images.unsplash.com/photo-1621996346565-e3d5d6281229?auto=format&fit=crop&w=900&q=85"}
+];
+
+const DRINKS = [
+  {name: "Tropical Ocean Breeze Mocktail", category: "Drinks", price: 5.99, image: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=900&q=85"},
+  {name: "Fresh Strawberry Lemonade", category: "Drinks", price: 4.49, image: "https://images.unsplash.com/photo-1621263764928-df1444c5e859?auto=format&fit=crop&w=900&q=85"},
+  {name: "Iced Passion Fruit Tea", category: "Drinks", price: 3.99, image: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=900&q=85"},
+  {name: "Classic Virgin Piña Colada", category: "Drinks", price: 6.49, image: "https://images.unsplash.com/photo-1541658016709-82535e94bc69?auto=format&fit=crop&w=900&q=85"},
+  {name: "Artisanal Cold Brew Coffee", category: "Drinks", price: 4.99, image: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=900&q=85"},
+  {name: "Sparkling Berry Punch", category: "Drinks", price: 4.79, image: "https://images.unsplash.com/photo-1536935338788-846bb9981813?auto=format&fit=crop&w=900&q=85"}
+];
+
+let cart = [];
+
+function renderCategories() {
+  const container = document.getElementById('categories');
+  container.innerHTML = CATEGORIES.map(c => `
+    <button class="cat" onclick="${c.name === 'Kids' ? 'showKids()' : c.name === 'Drinks' ? 'showDrinks()' : `filterCategory('${c.name}')`}">
+      <img class="catImg" src="${c.image}" alt="${c.name}">
+      <span>${c.name}</span>
+    </button>
+  `).join('') + `
+    <button class="cat" onclick="showMenu()">
+      <div class="catImg" style="background:#131a18;display:flex;align-items:center;justify-content:center;border:3px solid var(--gold);color:var(--gold);font-size:20px;">➔</div>
+      <span>View All</span>
+    </button>
+  `;
+}
+
+function renderPopular() {
+  const container = document.getElementById('popular');
+  container.innerHTML = MENU.slice(0, 6).map(item => `
+    <div class="card">
+      <img src="${item.image}" alt="${item.name}">
+      <div class="cardBody">
+        <h3>${item.name}</h3>
+        <div class="price">$${item.price.toFixed(2)}</div>
+        <button class="add" onclick="addToCart('${item.name}', ${item.price})">Add to Cart</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addToCart(name, price) {
+  const found = cart.find(i => i.name === name);
+  if (found) {
+    found.qty++;
+  } else {
+    cart.push({name, price, qty: 1});
+  }
+  updateCount();
+}
+
+function updateCount() {
+  const count = cart.reduce((sum, i) => sum + i.qty, 0);
+  document.getElementById('count').innerText = count;
+}
+
+function openCart() {
+  const lines = document.getElementById('cartLines');
+  if (cart.length === 0) {
+    lines.innerHTML = `<div class="empty">Your cart is currently empty.</div>`;
+    document.getElementById('cartTotal').innerText = '$0.00';
+  } else {
+    lines.innerHTML = cart.map(i => `
+      <div class="cartLine">
+        <div><strong>${i.name}</strong><br><small style="color:#8c9592">$${i.price.toFixed(2)} each</small></div>
+        <div class="qty">
+          <button onclick="changeQty('${i.name}', -1)">-</button>
+          <span>${i.qty}</span>
+          <button onclick="changeQty('${i.name}', 1)">+</button>
+        </div>
+      </div>
+    `).join('');
+    const total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+    document.getElementById('cartTotal').innerText = `$${total.toFixed(2)}`;
+  }
+  document.getElementById('cartModal').classList.add('show');
+}
+
+function closeCart() {
+  document.getElementById('cartModal').classList.remove('show');
+}
+
+function changeQty(name, delta) {
+  const item = cart.find(i => i.name === name);
+  if (item) {
+    item.qty += delta;
+    if (item.qty <= 0) {
+      cart = cart.filter(i => i.name !== name);
+    }
+  }
+  updateCount();
+  openCart();
+}
+
+function checkout() {
+  if (cart.length === 0) return;
+  closeCart();
+  document.getElementById('checkoutModal').classList.add('show');
+}
+
+function closeCheckout() {
+  document.getElementById('checkoutModal').classList.remove('show');
+}
+
+function placeOrder() {
+  const name = document.getElementById('customerName').value || 'Valued Guest';
+  alert(`Thank you for your fake roleplay order, ${name}! Your meal is being prepared in the SeaRode kitchen.`);
+  cart = [];
+  updateCount();
+  closeCheckout();
+  goHome();
+}
+
+function showMenu() {
+  const main = document.getElementById('main');
+  const cats = CATEGORIES.map(c => c.name);
+  main.innerHTML = `
+    <div class="sectionTitle"><h2>Full Menu</h2><small onclick="goHome()">← Back to Home</small></div>
+    <div class="filters">
+      <button class="pill active" onclick="filterCategory('All', this)">All Items</button>
+      ${cats.map(c => `<button class="pill" onclick="${c === 'Kids' ? 'showKids()' : c === 'Drinks' ? 'showDrinks()' : `filterCategory('${c}', this)`}">${c}</button>`).join('')}
+    </div>
+    <div class="grid" id="menuGrid">
+      ${MENU.map(item => `
+        <div class="card">
+          <img src="${item.image}" alt="${item.name}">
+          <div class="cardBody">
+            <h3>${item.name}</h3>
+            <div class="price">$${item.price.toFixed(2)}</div>
+            <button class="add" onclick="addToCart('${item.name}', ${item.price})">Add to Cart</button>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function showKids() {
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="sectionTitle"><h2>Kids Menu</h2><small onclick="goHome()">← Back to Home</small></div>
+    <div class="grid">
+      ${KIDS_MENU.map(item => `
+        <div class="card">
+          <img src="${item.image}" alt="${item.name}">
+          <div class="cardBody">
+            <h3>${item.name}</h3>
+            <div class="price">$${item.price.toFixed(2)}</div>
+            <button class="add" onclick="addToCart('${item.name}', ${item.price})">Add to Cart</button>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function showDrinks() {
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="sectionTitle"><h2>Drinks & Refreshments</h2><small onclick="goHome()">← Back to Home</small></div>
+    <div class="grid">
+      ${DRINKS.map(item => `
+        <div class="card">
+          <img src="${item.image}" alt="${item.name}">
+          <div class="cardBody">
+            <h3>${item.name}</h3>
+            <div class="price">$${item.price.toFixed(2)}</div>
+            <button class="add" onclick="addToCart('${item.name}', ${item.price})">Add to Cart</button>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function filterCategory(cat, el) {
+  if (el) {
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+  }
+  const main = document.getElementById('main');
+  if (!document.getElementById('menuGrid')) {
+    showMenu();
+  }
+  const filtered = cat === 'All' ? MENU : MENU.filter(i => i.category === cat);
+  const grid = document.getElementById('menuGrid');
+  if (grid) {
+    grid.innerHTML = filtered.map(item => `
+      <div class="card">
+        <img src="${item.image}" alt="${item.name}">
+        <div class="cardBody">
+          <h3>${item.name}</h3>
+          <div class="price">$${item.price.toFixed(2)}</div>
+          <button class="add" onclick="addToCart('${item.name}', ${item.price})">Add to Cart</button>
+        </div>
+      </div>
+    `).join('');
+  }
+}
+
+function renderSearch() {
+  const query = document.getElementById('search').value.toLowerCase();
+  if (!query) {
+    goHome();
+    return;
+  }
+  const main = document.getElementById('main');
+  const allSearchable = [...MENU, ...KIDS_MENU, ...DRINKS];
+  const results = allSearchable.filter(i => i.name.toLowerCase().includes(query) || i.category.toLowerCase().includes(query));
+  main.innerHTML = `
+    <div class="sectionTitle"><h2>Search Results for "${query}"</h2><small onclick="goHome()">← Back to Home</small></div>
+    <div class="grid">
+      ${results.length ? results.map(item => `
+        <div class="card">
+          <img src="${item.image}" alt="${item.name}">
+          <div class="cardBody">
+            <h3>${item.name}</h3>
+            <div class="price">$${item.price.toFixed(2)}</div>
+            <button class="add" onclick="addToCart('${item.name}', ${item.price})">Add to Cart</button>
+          </div>
+        </div>
+      `).join('') : '<p class="empty">No matching items found.</p>'}
+    </div>
+  `;
+}
+
+function goHome() {
+  document.getElementById('main').innerHTML = `
+    <div class="sectionTitle">
+      <h2>Popular Items</h2>
+      <small onclick="showMenu()">View All Popular Items →</small>
+    </div>
+    <div class="grid" id="popular"></div>
+  `;
+  renderPopular();
+}
+
+renderCategories();
+renderPopular();
+</script>
 </body>
 </html>
